@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 my-5">
+            <h1>Đăng sản phẩm</h1>
+            <form method="post" action="store">
+                <select name="category" class="mb-3" id="">
+                    <option value="burger">Burger</option>
+                    <option value="pizza">Pizza</option>
+                    <option value="pasta">Pasta</option>
+                    <option value="drink">Drink</option>
+                </select>
+                <div class="mb-3">
+                    <input type="text" name="name" class="form-control" id="" placeholder="Tên sản phẩm">
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="price" class="form-control" id="" placeholder="Giá sản phẩm">
+                </div>
+                <div class="mb-3">
+                    <input class="form-control" name="image" type="text" id="" placeholder="Hình ảnh">
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" name="description" id="" rows="3"
+                        placeholder="Miêu tả sản phẩm"></textarea>
+                </div>
+                <button type="submit" class="btn btn-large btn-outline-primary">Thêm sản phẩm</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,129 @@
+<div class="container">
+    <div class="row">
+        <form method="post" action="/products/handle-form-action">
+            <h2 class="my-4">Sản phẩm đã xóa</h2>
+            <div class="d-flex align-items-center my-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+                    <label class="form-check-label" for="checkbox-all">
+                        Chọn tất cả
+                    </label>
+                </div>
+                <select class="form-select w-25 mx-3" name="action" aria-label="Default select example" required>
+                    <option value="">Chọn hành động</option>
+                    <option value="restore">Khôi phục</option>
+                    <option value="deleteForce">Xóa vĩnh viễn</option>
+                </select>
+                <button class="btn btn-primary action-submit-btn disabled">Thực hiện</button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tên sản phẩm</th>
+                        <th scope="col">Giá</th>
+                        <th scope="col">Loại sản phẩm</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each products}}
+                    <tr>
+                        <th>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="productId" value="{{this._id}}">
+                            </div>
+                        </th>
+                        <th scope="row">{{ sum @index 1}}</th>
+                        <td>{{this.name}}</td>
+                        <td>{{this.price}}</td>
+                        <td>{{this.category}}</td>
+                        <td>
+                            <a href="" class="btn btn-link btn-restore" data-bs-id="{{this._id}}">Khôi phục</a>
+                            <a href="" class="btn btn-link" data-bs-id="{{this._id}}" data-bs-toggle="modal"
+                                data-bs-target="#deleteProductModal">Xóa vĩnh viễn</a>
+                        </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <h5>Thùng rác rỗng</h5>
+                            <a href="/me/stored/products">Sản phẩm của bạn</a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Xóa sản phẩm?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm này?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button id="btn-delete-product" type="button" class="btn btn-danger">Xóa vĩnh viễn</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form name="form-restore-product" method="post">
+</form>
+
+<script>
+    const deleteProductModal = document.getElementById('deleteProductModal')
+    const deleteBtn = document.getElementById('btn-delete-product')
+    const deleteForm = document.forms['form-delete-product']
+    const restoreForm = document.forms['form-restore-product']
+    const restoreBtns = document.querySelectorAll('.btn-restore')
+
+    const checkboxAll = document.getElementById('checkbox-all')
+    const productItemCheckboxs = document.getElementsByName('productId')
+    const btnActionSubmit = document.querySelector('.action-submit-btn')
+
+    var productId;
+
+    checkboxAll.onchange = function () {
+        var isChecked = this.checked;
+        productItemCheckboxs.forEach(productItemCheckbox => {
+            productItemCheckbox.checked = isChecked
+        })
+        renderBtnSubmit()
+    }
+    productItemCheckboxs.forEach(productItemCheckbox => {
+        productItemCheckbox.onchange = function () {
+            var ischechedAll = productItemCheckboxs.length === document.querySelectorAll('input[name="productId"]:checked').length
+            checkboxAll.checked = ischechedAll
+            renderBtnSubmit()
+        }
+    });
+    restoreBtns.forEach((restoreBtn) => {
+        restoreBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const productId = e.target.getAttribute('data-bs-id')
+            restoreForm.action = '/products/' + productId + '/restore?_method=PATCH';
+            restoreForm.submit();
+        });
+    });
+    deleteProductModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget
+        productId = button.getAttribute('data-bs-id')
+    })
+    deleteBtn.addEventListener('click', function () {
+        deleteForm.action = '/products/' + productId + '/force?_method=DELETE';
+        deleteForm.submit();
+    })
+
+    function renderBtnSubmit() {
+        var checkCount = document.querySelectorAll('input[name="productId"]:checked').length
+        checkCount > 0 ? btnActionSubmit.classList.remove('disabled') : btnActionSubmit.classList.add('disabled')
+    }
+</script>

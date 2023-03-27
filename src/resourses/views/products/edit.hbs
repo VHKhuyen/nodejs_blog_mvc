@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 my-5">
+            <h1>Cập nhật sản phẩm</h1>
+            <form method="post" action="/products/{{product._id}}?_method=PUT">
+                <select name="category" aria-valuetext="{{product.category}}"  class="mb-3" id="category">
+                    <option value="burger">Burger</option>
+                    <option value="pizza">Pizza</option>
+                    <option value="pasta">Pasta</option>
+                    <option value="drink">Drink</option>
+                </select>
+                <div class="mb-3">
+                    <input type="text" name="name" class="form-control" value="{{product.name}}" id="name" placeholder="Tên sản phẩm">
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="price" class="form-control" value="{{product.price}}" id="price" placeholder="Giá sản phẩm">
+                </div>
+                <div class="mb-3">
+                    <input class="form-control" name="image" type="text" value="{{product.image}}" id="image" placeholder="Hình ảnh">
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" name="description" id="description" rows="3"
+                        placeholder="Miêu tả sản phẩm">{{product.description}}</textarea>
+                </div>
+                <button type="submit" class="btn btn-large btn-outline-primary">Cập nhật</button>
+            </form>
+        </div>
+    </div>
+</div>
